@@ -18,6 +18,8 @@ mongoose
   .catch((e) => console.log(e));
 
 const app = express();
+app.use(express.json());
+
 app.use(
   cors({
     origin: ["https://baaro.netlify.app", "http://localhost:5173"],
@@ -25,7 +27,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
-app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
