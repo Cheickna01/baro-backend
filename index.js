@@ -20,7 +20,11 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://baaro.netlify.app", "http://localhost:5173"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+},));
 app.use(express.json());
 
 io.on("connection", (socket) => {
