@@ -9,23 +9,32 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("connection à la base de donées réussie..."))
+  .catch((e) => console.log(e));
+
 const app = express();
+app.use(
+  cors({
+    origin: ["https://baaro.netlify.app", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
+app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://baaro.netlify.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   },
 });
-
-app.use(cors({
-  origin: ["https://baaro.netlify.app", "http://localhost:5173"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-},));
-app.use(express.json());
 
 io.on("connection", (socket) => {
   console.log("Utilisateur connecté :", socket.id);
@@ -50,11 +59,6 @@ io.on("connection", (socket) => {
     console.log("Utilisateur déconnecté");
   });
 });
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("connection à la base de donées réussie..."))
-  .catch((e) => console.log(e));
 
 const authentificate = async (req, res, next) => {
   if (req.headers.authorization) {
