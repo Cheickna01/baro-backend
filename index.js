@@ -18,19 +18,23 @@ mongoose
   .catch((e) => console.log(e));
 
 const app = express();
-app.use(
-  cors({
-    origin: ["https://baaro.netlify.app", "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  })
-);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://baaro.netlify.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  next();
+});
 app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://baaro.netlify.app", "http://localhost:5173"],
+    origin: "https://baaro.netlify.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   },
@@ -141,7 +145,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { nom, prenom, email, mot_de_passe } = req.body;
   const user = await User.findOne({ email: email });
-  console.log(user)
+  console.log(user);
   if (user) {
     try {
       const mdp = user.mot_de_passe;
@@ -168,13 +172,13 @@ app.post("/login", async (req, res) => {
         }
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res
         .status(400)
         .json({ message: "Mot de passe ou identifiant incorrect!!!" }, error);
     }
   } else {
-    console.log(user)
+    console.log(user);
     res.status(404).json({ message: "Utilisateur introuvable!!!" });
   }
 });
