@@ -9,7 +9,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 
 mongoose
-  .connect("mongodb://localhost:27017/talkifydb")
+  .connect(`mongodb+srv://diabyhamala0:AZERhd%40001diab@cluster0.tgnse.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
   .then(console.log("connection à la base de donées réussie..."));
 
 const app = express();
