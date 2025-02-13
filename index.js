@@ -1,11 +1,11 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./users");
 const Message = require("./messages");
-const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 
@@ -18,8 +18,6 @@ mongoose
   .catch((e) => console.log(e));
 
 const app = express();
-app.use(express.json());
-
 app.use(
   cors({
     origin: ["https://baaro.netlify.app", "http://localhost:5173"],
@@ -27,6 +25,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
