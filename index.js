@@ -142,6 +142,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { nom, prenom, email, mot_de_passe } = req.body;
   const user = await User.findOne({ email: email });
+  console.log(user)
   if (user) {
     try {
       const mdp = user.mot_de_passe;
@@ -168,11 +169,13 @@ app.post("/login", async (req, res) => {
         }
       });
     } catch (error) {
+      console.log(error)
       res
         .status(400)
         .json({ message: "Mot de passe ou identifiant incorrect!!!" }, error);
     }
   } else {
+    console.log(user)
     res.status(404).json({ message: "Utilisateur introuvable!!!" });
   }
 });
