@@ -47,11 +47,8 @@ io.on("connection", (socket) => {
 });
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(console.log("connection à la base de donées réussie..."));
+  .connect(process.env.MONGO_URI)
+  .then(()=>console.log("connection à la base de donées réussie...")).catch((e)=>console.log(e))
 
 const authentificate = async (req, res, next) => {
   if (req.headers.authorization) {
