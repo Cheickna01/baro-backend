@@ -15,7 +15,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://baaro.netlify.app", "http://localhost:5173"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   },
 });
 
