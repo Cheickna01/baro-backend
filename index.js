@@ -7,9 +7,11 @@ const Message = require("./messages");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
+require("dotenv").config();
+
 
 mongoose
-  .connect(`mongodb+srv://diabyhamala0:AZERhd%40001diab@cluster0.tgnse.mongodb.net/talkifydb?retryWrites=true&w=majority&appName=Cluster0`)
+  .connect(process.env.MONGO_URI)
   .then(console.log("connection à la base de donées réussie..."));
 
 const app = express();
