@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
@@ -7,13 +8,7 @@ const Message = require("./messages");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
-require("dotenv").config();
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(console.log("connection à la base de donées réussie..."));
+
 
 const app = express();
 
@@ -50,6 +45,13 @@ io.on("connection", (socket) => {
     console.log("Utilisateur déconnecté");
   });
 });
+
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(console.log("connection à la base de donées réussie..."));
 
 const authentificate = async (req, res, next) => {
   if (req.headers.authorization) {
