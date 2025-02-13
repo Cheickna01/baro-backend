@@ -9,20 +9,20 @@ const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 
-
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(console.log("connection à la base de donées réussie..."));
 
 const app = express();
 
-
-
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-      methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
 app.use(cors());
@@ -32,23 +32,23 @@ io.on("connection", (socket) => {
   console.log("Utilisateur connecté :", socket.id);
 
   socket.on("message", (message) => {
-      io.emit("message", message); // 🔥 Envoie à tous les utilisateurs
+    io.emit("message", message); // 🔥 Envoie à tous les utilisateurs
   });
 
   socket.on("update-message", (updatedMessage) => {
-      io.emit("update-message", updatedMessage);
+    io.emit("update-message", updatedMessage);
   });
 
   socket.on("reply-message", (reply) => {
-      io.emit("reply-message", reply);
+    io.emit("reply-message", reply);
   });
 
-  socket.on("delete-message",(deletedMessage)=>{
-    io.emit("delete-message", deletedMessage)
-  })
+  socket.on("delete-message", (deletedMessage) => {
+    io.emit("delete-message", deletedMessage);
+  });
 
   socket.on("disconnect", () => {
-      console.log("Utilisateur déconnecté");
+    console.log("Utilisateur déconnecté");
   });
 });
 
@@ -286,7 +286,7 @@ app.post("/updatemessage", authentificate, async (req, res) => {
               res.status(200).json("Réaction modifié avec succès!");
             }
           } else {
-            if(!req.body.del){
+            if (!req.body.del) {
               msg.reactions.push({
                 reaction: reaction,
                 user_id: user._id,
@@ -295,10 +295,10 @@ app.post("/updatemessage", authentificate, async (req, res) => {
               });
               msg.save();
               res.status(200).json("Message modifié avec succès!");
-            }else{
+            } else {
               res.status(200).json("");
-            } 
-          }  
+            }
+          }
         }
       } catch (error) {
         console.log(error);
